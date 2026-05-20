@@ -177,3 +177,8 @@ cython_debug/
 data/
 logs/
 cred.py
+
+
+docs/
+
+metabase/plugins/
