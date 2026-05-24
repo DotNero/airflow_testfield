@@ -10,6 +10,7 @@ RAW
 from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 from scripts.weather.api_download import api_download
+from scripts.weather.write_log_to_postgres import write_log_to_postgres
 
 # Если нужно за текущий день
 # START_DATE = pendulum.today("UTC").subtract(days=30)

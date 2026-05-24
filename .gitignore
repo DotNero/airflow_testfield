@@ -182,3 +182,5 @@ cred.py
 docs/
 
 metabase/plugins/
+
+.assistant_context/

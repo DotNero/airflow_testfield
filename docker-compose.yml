@@ -75,7 +75,7 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+    _PIP_ADDITIONAL_REQUIREMENTS: ''
     # The following line can be used to set a custom config file, stored in the local config folder
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
     #Python basic path
@@ -83,7 +83,12 @@ x-airflow-common:
     # Minio
     AIRFLOW_CONN_MINIO_S3: >-
       {"conn_type": "aws", "login": "${MINIO_ACCESS_KEY}", "password": "${MINIO_SECRET_KEY}", "extra": {"endpoint_url": "http://minio:9000", "region_name": "us-east-1"}}
-
+    AIRFLOW_CONN_POSTGRES_DWH: >-
+      {"conn_type": "postgres", "host": "postgres_dwh", "schema": "${POSTGRES_DWH_DB}", "login": "${POSTGRES_DWH_USER}", "password": "${POSTGRES_DWH_PASSWORD}", "port": 5432}
+    AIRFLOW_CONN_CLICKHOUSE_HTTP: >-
+      {"conn_type": "http", "host": "clickhouse", "schema": "${CLICKHOUSE_DB}", "login": "${CLICKHOUSE_USER}", "password": "${CLICKHOUSE_PASSWORD}", "port": 8123, "extra": {"secure": false}}
+    AIRFLOW_CONN_OPEN_METEO_API: >-
+      {"conn_type": "http", "host": "https://archive-api.open-meteo.com"}
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
@@ -108,7 +113,7 @@ services:
     volumes:
       - postgres-db-dwh-volume:/var/lib/postgresql/data
     ports: 
-      - "5432:5432"
+      - "5433:5432"
     restart: always
 
   metabase:
