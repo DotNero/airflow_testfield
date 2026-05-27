@@ -1,11 +1,11 @@
 from config import settings
 from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy import URL, create_engine, text, Engine
+from sqlalchemy import URL, create_engine, text, Engine, pool
 
 
 class Database:
 
-    @property
+    @staticmethod
     def engine_from_settings() -> Engine:
         engine_from_settings = create_engine(
             url=settings.postgres_dwh_url_sync,
@@ -16,7 +16,7 @@ class Database:
         )
         return engine_from_settings
 
-    @property
+    @staticmethod
     def engine_from_airflow(conn) -> Engine:
         db_url = URL.create(
             drivername="postgresql+psycopg2",
