@@ -12,7 +12,7 @@ class PostgresDWHSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     @property
-    def postgres_dwh_url_sync(self) -> str:
+    def postgres_dwh_url_sync(self) -> URL:
         return URL.create(
             drivername="postgresql+psycopg2",
             username=self.POSTGRES_DWH_USER,

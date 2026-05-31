@@ -1,0 +1,62 @@
+# Start
+
+
+# Data Layers
+
+## Raw
+---
+minio
+    ports:
+        - "9000:9000"
+        - "9001:9001"
+---
+
+Dags: 
+- `raw_from_api_to_s3.py`
+Tasks:
+- `download_weather_api_upload_to_minio`
+- `write_postgres_metadata`
+
+## Staging
+
+Main DB: 
+postgres_dwh
+    ports: 
+        - "5433:5432"
+
+### Models
+
+`Base(DeclarativeBase)::class`
+---
+В базовой модели прописана конвенция для автоматической генерации имен индексов и ключей при создании миграций
+---
+
+`Database()::class`
+---
+Реализует два статических метода для подключения к `postgres_dwh`
+    - `engine_from_settings()->Engine`:
+        Использует для подключения конфиг `pydantic_settings`  и `.env`
+    - `engine_from_airflow(conn:Connection)->Engine`:
+        Использует созданное `airflow` подключение
+    Оба метода возвращают объект класса `Engine` `sqlalchemy`
+---
+
+`Weather():class`
+---
+Шаблон моделей для хранения метадаты выгрузки из API и `staging` данных для дальнейшей обработки и передачи в другие таблицы внутри `postgres_dwh` или на другие слои
+---
+
+# Migrations
+
+==`./migrations`==
+
+
+---
+`./venv/bin/alembic -c alembic.ini revision --autogenerate -m "create weather tables"` -- автогенерация миграции
+`./venv/bin/alembic -c alembic.ini current` -- текущая миграция
+`./venv/bin/alembic -c alembic.ini history` -- текущая ревизия
+`./venv/bin/alembic -c alembic.ini upgrade head` -- применить последнюю доступную ревизию
+
+---
+
+

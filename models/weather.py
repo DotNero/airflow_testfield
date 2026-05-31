@@ -14,7 +14,7 @@ from sqlalchemy import (
 
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from datetime import date
 from models.base import Base
 
 
@@ -31,11 +31,11 @@ class WeatherRawLog(Base):
     minio_link: Mapped[str] = mapped_column(Text, nullable=False)
     latitude: Mapped[float] = mapped_column(Float(precision=53), nullable=False)
     longitude: Mapped[float] = mapped_column(Float(precision=53), nullable=False)
-    start_date: Mapped[str] = mapped_column(Date, nullable=False)
-    end_date: Mapped[str] = mapped_column(Date, nullable=False)
-    s3_bucker: Mapped[str] = mapped_column(Text, nullable=False)
-    response_bytes: Mapped[int] = mapped_column(Integer, nullable=True)
-    http_status_code: Mapped[int] = mapped_column(Integer, nullable=True)
+    start_date: Mapped[date] = mapped_column(Date, nullable=False)
+    end_date: Mapped[date] = mapped_column(Date, nullable=False)
+    s3_bucket: Mapped[str] = mapped_column(Text, nullable=False)
+    response_bytes: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    http_status_code: Mapped[int | None] = mapped_column(Integer, nullable=True)
     dag_id: Mapped[str] = mapped_column(Text, nullable=False)
     run_id: Mapped[str] = mapped_column(Text, nullable=False)
 
@@ -60,14 +60,16 @@ class WeatherHourly(Base):
     observation_time: Mapped[datetime] = mapped_column(
         DateTime(timezone=False), nullable=False
     )
-    temperature_2m: Mapped[float] = mapped_column(Float(precision=53), nullable=True)
+    temperature_2m: Mapped[float | None] = mapped_column(
+        Float(precision=53), nullable=True
+    )
     temperature_measure: Mapped[str] = mapped_column(Text, nullable=False)
-    source_s3_bucker: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source_s3_bucket: Mapped[str | None] = mapped_column(Text, nullable=True)
     source_s3_key: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False), nullable=False, server_default=text("now()")
     )
-    load_id: Mapped[BigInteger] = mapped_column(
+    load_id: Mapped[int] = mapped_column(
         BigInteger, ForeignKey("metadata.weather_raw_log.id"), nullable=False
     )
 

@@ -51,3 +51,11 @@ download_weather_api_upload_to_minio = PythonOperator.partial(
     python_callable=api_download,
     dag=dag,
 ).expand_kwargs(city_request_params_mapped)
+
+write_postgres_metadata = PythonOperator.partial(
+    task_id="write_postgres_log",
+    python_callable=write_log_to_postgres,
+    dag=dag,
+).expand_kwargs(
+    city_request_params_mapped,
+)

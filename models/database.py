@@ -1,6 +1,7 @@
-from config import settings
+from config.settings import settings
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy import URL, create_engine, text, Engine, pool
+from airflow.sdk import Connection
 
 
 class Database:
@@ -17,7 +18,7 @@ class Database:
         return engine_from_settings
 
     @staticmethod
-    def engine_from_airflow(conn) -> Engine:
+    def engine_from_airflow(conn: Connection) -> Engine:
         db_url = URL.create(
             drivername="postgresql+psycopg2",
             username=conn.login,

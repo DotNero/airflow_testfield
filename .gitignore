@@ -184,3 +184,5 @@ docs/
 metabase/plugins/
 
 .assistant_context/
+
+.migrations/postgres/versios
